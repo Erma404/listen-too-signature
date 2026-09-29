@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { ACCENT, TEXT_COLOR, FALLBACK_PHOTO, assetUrl, activeBlocks, phoneKeys, displayValue, qrTarget } from "./signature.js";
+import { ACCENT, TEXT_COLOR, FALLBACK_PHOTO, PHOTO_RADIUS, assetUrl, activeBlocks, phoneKeys, displayValue, qrTarget } from "./signature.js";
 
 const ICONS = { mobile: "sig/phone.png", email: "sig/email.png", website: "sig/website.png", address: "sig/address.png" };
 const HOUSE = '"WT Gothic", Arial, sans-serif';
@@ -131,7 +131,14 @@ export async function renderSignaturePng({ details, images, template, design }) 
   ctx.fillRect(0, 0, width, height);
   ctx.textBaseline = "top";
 
-  if (withPhoto && photoImg) ctx.drawImage(photoImg, PAD, PAD, PHOTO, PHOTO);
+  if (withPhoto && photoImg) {
+    // Coins arrondis quelle que soit la source (y compris une URL publique carrée)
+    ctx.save();
+    roundRect(ctx, PAD, PAD, PHOTO, PHOTO, (PHOTO_RADIUS * PHOTO) / 72);
+    ctx.clip();
+    ctx.drawImage(photoImg, PAD, PAD, PHOTO, PHOTO);
+    ctx.restore();
+  }
   let y = PAD;
   ops.forEach((o) => {
     o.draw(ctx, textX, y);

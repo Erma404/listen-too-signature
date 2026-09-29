@@ -14,7 +14,7 @@ Les maquettes Figma validées ne s'importent pas proprement dans Outlook : Outlo
 Éditeur en 4 étapes, côte à côte avec l'aperçu live (aucun scroll de page) :
 
 1. **Détails** : nom, fonction, mobile, email (format `cdupere@listen-too.com` : initiale du prénom + nom), site web, adresse
-2. **Photo** : import local (aperçu et PNG uniquement, recadré en carré) + URL publique de la photo (utilisée pour l'export réel). Sans photo, le logo Listen too (icône blanche sur carré noir) s'affiche automatiquement.
+2. **Photo** : import local (recadrée en carré, coins de 8 px intégrés, téléchargeable pour hébergement) + URL publique de la photo (utilisée pour l'export réel). Sans photo, le logo Listen too (icône blanche sur carré noir) s'affiche automatiquement.
 3. **Modèle** : horizontal avec photo, ou compact sans photo (le plus sûr toutes messageries)
 4. **Design** : police web-safe du HTML exporté, champs personnalisés, QR code (généré automatiquement depuis le lien saisi, ou le site web si vide), ordre des champs de contact (le mobile reste fixe sous la fonction)
 
@@ -32,7 +32,7 @@ Onglet **Enregistrées** : sauvegarder, modifier, dupliquer, supprimer des signa
 
 - Tableaux `role="presentation"`, styles en ligne, attributs `bgcolor` / `width` doublés pour Outlook
 - Fond blanc forcé sur toute la signature (limite l'inversion des couleurs en thème sombre)
-- Photo carrée 72 × 72 px, sans coin arrondi (Outlook Windows ignore `border-radius`). Le logo Listen too de repli a des coins de 8 px intégrés à l'image (`public/sig/logo-listen-too.png`), donc visibles partout
+- Photo et logo 72 × 72 px avec coins de 8 px. Outlook Windows ignore `border-radius` : les coins sont donc intégrés à l'image pour le logo de repli (`public/sig/logo-listen-too.png`) et pour les photos importées (bouton « Télécharger la photo arrondie », à héberger). Une photo hébergée carrée garde des coins carrés dans Outlook Windows uniquement
 - Icônes et logo servis en **URL absolue** depuis le site déployé (`/sig/*.png`) : Gmail supprime les images `data:` en base64 et Outlook les bloque souvent
 - QR code dans le HTML : image générée par `api.qrserver.com` (aucune configuration). Dans le PNG : QR généré localement (bibliothèque `qrcode`)
 

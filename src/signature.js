@@ -22,6 +22,9 @@ const ICON_FILES = {
   address: "sig/address.png",
 };
 export const FALLBACK_PHOTO = "sig/logo-listen-too.png";
+// Coins de la photo / du logo à 72 px d'affichage. Outlook Windows ignore border-radius :
+// le logo et les photos importées ont donc aussi ces coins intégrés à l'image.
+export const PHOTO_RADIUS = 8;
 
 // Les images d'une signature doivent être hébergées sur une URL publique absolue
 // (Gmail supprime les images data:, Outlook les bloque souvent).
@@ -160,7 +163,7 @@ export function buildSignatureHtml({ details, template, design, photoSrc }) {
   const photoCell =
     `<td width="72" ${cellWhite}width:72px;min-width:72px;padding:0;"><img src="${escapeHtml(photoSrc)}" width="72" height="72" alt="${escapeHtml(
       details.name
-    )}" border="0" style="display:block;width:72px;min-width:72px;max-width:72px;height:72px;border:0;" /></td>` +
+    )}" border="0" style="display:block;width:72px;min-width:72px;max-width:72px;height:72px;border:0;border-radius:${PHOTO_RADIUS}px;" /></td>` +
     `<td width="16" style="width:16px;min-width:16px;font-size:0;line-height:0;padding:0;">&nbsp;</td>`;
   return table(`<tr>${photoCell}<td ${cellWhite}padding:0;">${textStack}</td></tr>`, white);
 }

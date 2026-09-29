@@ -6,6 +6,7 @@ import {
   BLOCK_META,
   DEFAULT_BLOCK_ORDER,
   FALLBACK_PHOTO,
+  PHOTO_RADIUS,
   assetUrl,
   assetsAreLocal,
   buildSignatureHtml,
@@ -91,7 +92,8 @@ function normalizeSnapshot(s = {}) {
   };
 }
 
-// Recadrage carré 240 px : photo carrée par défaut, et assez légère pour tenir dans localStorage.
+// Recadrage carré 240 px avec coins de 8 px (à 72 px d'affichage) intégrés à l'image,
+// pour qu'ils s'affichent aussi dans Outlook Windows. Assez léger pour tenir dans localStorage.
 function squareCrop(file) {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
@@ -101,11 +103,12 @@ function squareCrop(file) {
       const canvas = document.createElement("canvas");
       canvas.width = canvas.height = 240;
       const ctx = canvas.getContext("2d");
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, 240, 240);
+      ctx.beginPath();
+      ctx.roundRect(0, 0, 240, 240, (PHOTO_RADIUS * 240) / 72);
+      ctx.clip();
       ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, 240, 240);
       URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL("image/jpeg", 0.9));
+      resolve(canvas.toDataURL("image/png"));
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
@@ -463,18 +466,23 @@ export default function SignatureGenerator() {
               <div>
                 <h1 className="ui-title mb-6">Votre photo</h1>
                 <div className="flex gap-4 mb-6">
-                  <img src={images.photoPreview || images.photoUrl.trim() || fallbackPhoto} alt="" className="w-20 h-20 shrink-0 object-cover" style={{ border: `1px solid ${C.line}` }} />
+                  <img src={images.photoPreview || images.photoUrl.trim() || fallbackPhoto} alt="" className="w-20 h-20 shrink-0 object-cover" style={{ borderRadius: 9 }} />
                   <div className="flex flex-col justify-between">
                     <label className="ui-btn ui-btn--ghost cursor-pointer self-start">
                       <ImagePlus size={16} strokeWidth={1.75} /> Importer une photo
                       <input type="file" accept="image/*" className="sr-only" onChange={onPhotoUpload} />
                     </label>
                     {images.photoPreview ? (
-                      <button onClick={() => setImages((im) => ({ ...im, photoPreview: null }))} className="ui-hint underline self-start">
-                        Retirer la photo importée
-                      </button>
+                      <span className="flex gap-3">
+                        <a href={images.photoPreview} download={`photo-${slug(details.name)}.png`} className="ui-hint underline">
+                          Télécharger la photo arrondie
+                        </a>
+                        <button onClick={() => setImages((im) => ({ ...im, photoPreview: null }))} className="ui-hint underline">
+                          Retirer
+                        </button>
+                      </span>
                     ) : (
-                      <p className="ui-hint">5 Mo max, recadrée en carré. Aperçu et PNG uniquement.</p>
+                      <p className="ui-hint">5 Mo max, recadrée en carré, coins de 8 px.</p>
                     )}
                   </div>
                 </div>
@@ -483,8 +491,8 @@ export default function SignatureGenerator() {
                   <input className={inputCls} value={images.photoUrl} onChange={(e) => setImages((im) => ({ ...im, photoUrl: e.target.value }))} placeholder="https://listen-too.com/team/prenom-nom.jpg" />
                 </Field>
                 <p className="ui-hint">
-                  Pour que la photo s'affiche dans les emails reçus, elle doit être hébergée sur une URL publique (image carrée, environ 240 × 240 px). Sans photo,
-                  le logo Listen too s'affiche automatiquement.
+                  Pour que la photo s'affiche dans les emails reçus, elle doit être hébergée sur une URL publique. Hébergez de préférence la photo arrondie
+                  téléchargée ci-dessus : sinon Outlook Windows l'affichera avec des coins carrés. Sans photo, le logo Listen too s'affiche automatiquement.
                 </p>
               </div>
             )}
