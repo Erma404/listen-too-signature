@@ -8,15 +8,6 @@ export const MUTED_COLOR = "#555555";
 
 export const FONTS = ["Arial", "Helvetica", "Georgia", "Times New Roman", "Verdana", "Tahoma", "Trebuchet MS", "Courier New"];
 
-export const SOCIALS_META = [
-  { key: "linkedin", label: "LinkedIn", abbr: "in", color: "#0A66C2" },
-  { key: "instagram", label: "Instagram", abbr: "IG", color: "#E4405F" },
-  { key: "facebook", label: "Facebook", abbr: "f", color: "#1877F2" },
-  { key: "twitter", label: "X / Twitter", abbr: "X", color: "#000000" },
-  { key: "youtube", label: "YouTube", abbr: "YT", color: "#FF0000" },
-  { key: "github", label: "GitHub", abbr: "Gh", color: "#181717" },
-];
-
 // Champs réordonnables. Le téléphone (fixe + mobile) est hors liste : toujours juste sous la fonction.
 export const BLOCK_META = {
   email: { label: "Email" },
@@ -101,14 +92,10 @@ export function phoneKeys(details) {
   return ["phone", "mobile"].filter((k) => details[k] && details[k].trim());
 }
 
-export function activeSocials(socials) {
-  return SOCIALS_META.filter((s) => socials[s.key]?.enabled && socials[s.key].url.trim());
-}
-
 /**
  * @param photoSrc URL de l'image à afficher en modèle horizontal (ignorée en compact)
  */
-export function buildSignatureHtml({ details, socials, template, design, photoSrc }) {
+export function buildSignatureHtml({ details, template, design, photoSrc }) {
   const ff = fontStack(design.font);
   const accent = design.color || ACCENT;
   const base = `font-family:${ff};color:${TEXT_COLOR};`;
@@ -156,27 +143,12 @@ export function buildSignatureHtml({ details, socials, template, design, photoSr
     })
     .join("");
 
-  const socialList = activeSocials(socials);
-  const socialRow = socialList.length
-    ? `<tr><td style="padding:8px 0 0 0;">${table(
-        `<tr>${socialList
-          .map(
-            (s, i) =>
-              `<td width="24" height="24" bgcolor="${s.color}" align="center" valign="middle" style="width:24px;height:24px;background-color:${s.color};text-align:center;vertical-align:middle;padding:0;line-height:24px;"><a href="${escapeHtml(
-                normalizeUrl(socials[s.key].url)
-              )}" style="font-family:Arial, sans-serif;font-size:10px;font-weight:bold;color:#ffffff;text-decoration:none;line-height:24px;">${s.abbr}</a></td>` +
-              (i < socialList.length - 1 ? `<td width="6" style="width:6px;font-size:0;line-height:0;">&nbsp;</td>` : "")
-          )
-          .join("")}</tr>`
-      )}</td></tr>`
-    : "";
-
   const qr = qrTarget(design, details);
   const qrRow = qr
     ? `<tr><td style="padding:8px 0 0 0;"><a href="${escapeHtml(qr)}"><img src="${escapeHtml(qrImageUrl(qr))}" width="70" height="70" alt="QR code" border="0" style="display:block;width:70px;height:70px;border:0;" /></a></td></tr>`
     : "";
 
-  const textStack = table(`${nameRow}${entityRow}${titleRow}${phoneRow}${blockRows}${customRows}${socialRow}${qrRow}`);
+  const textStack = table(`${nameRow}${entityRow}${titleRow}${phoneRow}${blockRows}${customRows}${qrRow}`);
   const white = ` bgcolor="#ffffff" style="border-collapse:collapse;background-color:#ffffff;"`;
   const cellWhite = `bgcolor="#ffffff" valign="top" style="vertical-align:top;background-color:#ffffff;`;
 
@@ -190,7 +162,7 @@ export function buildSignatureHtml({ details, socials, template, design, photoSr
   return table(`<tr>${photoCell}<td ${cellWhite}padding:0;">${textStack}</td></tr>`, white);
 }
 
-export function buildSignaturePlainText({ details, socials, design }) {
+export function buildSignaturePlainText({ details, design }) {
   const lines = [details.name || "Prénom Nom"];
   if (details.dept.trim()) lines.push(details.dept.trim());
   if (details.title.trim()) lines.push(details.title.trim());
@@ -198,6 +170,5 @@ export function buildSignaturePlainText({ details, socials, design }) {
   if (phones.length) lines.push(phones.join("  |  "));
   activeBlocks(details, design).forEach((k) => lines.push(displayValue(k, details[k])));
   design.customFields.filter((f) => f.label.trim() || f.value.trim()).forEach((f) => lines.push(`${f.label} : ${f.value}`.trim()));
-  activeSocials(socials).forEach((s) => lines.push(`${s.label} : ${normalizeUrl(socials[s.key].url)}`));
   return lines.join("\n");
 }

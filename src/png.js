@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { ACCENT, TEXT_COLOR, MUTED_COLOR, FALLBACK_PHOTO, assetUrl, activeBlocks, phoneKeys, activeSocials, displayValue, qrTarget } from "./signature.js";
+import { ACCENT, TEXT_COLOR, MUTED_COLOR, FALLBACK_PHOTO, assetUrl, activeBlocks, phoneKeys, displayValue, qrTarget } from "./signature.js";
 
 const ICONS = { phone: "sig/phone.png", mobile: "sig/phone.png", email: "sig/email.png", website: "sig/website.png", address: "sig/address.png" };
 const HOUSE = '"WT Gothic", Arial, sans-serif';
@@ -27,7 +27,7 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 /** Génère un PNG fidèle à la maquette (police WT Gothic). Retourne { blob, photoMissing }. */
-export async function renderSignaturePng({ details, images, socials, template, design }) {
+export async function renderSignaturePng({ details, images, template, design }) {
   try {
     await Promise.all([document.fonts.load(`400 16px ${HOUSE}`), document.fonts.load(`600 16px ${HOUSE}`)]);
   } catch {
@@ -58,7 +58,6 @@ export async function renderSignaturePng({ details, images, socials, template, d
     entity: `400 13px ${HOUSE}`,
     pill: `600 12px ${HOUSE}`,
     body: `400 13px ${HOUSE}`,
-    badge: "700 10px Arial, sans-serif",
   };
 
   // Mise en page : liste d'opérations de dessin avec leur hauteur, mesurée avant de dimensionner le canvas.
@@ -118,23 +117,6 @@ export async function renderSignaturePng({ details, images, socials, template, d
         ctx.fillText(t, x, y + 3);
       });
     });
-  const socialList = activeSocials(socials);
-  if (socialList.length) {
-    add(34, socialList.length * 30 - 6, (ctx, x, y) => {
-      ctx.font = F.badge;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      socialList.forEach((s, i) => {
-        const bx = x + i * 30;
-        ctx.fillStyle = s.color;
-        ctx.fillRect(bx, y + 8, 24, 24);
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(s.abbr, bx + 12, y + 20.5);
-      });
-      ctx.textAlign = "left";
-      ctx.textBaseline = "top";
-    });
-  }
   if (qrImg) add(88, 80, (ctx, x, y) => ctx.drawImage(qrImg, x, y + 8, 80, 80));
 
   const PAD = 20;

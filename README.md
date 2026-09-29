@@ -11,13 +11,12 @@ Les maquettes Figma validées ne s'importent pas proprement dans Outlook : Outlo
 
 ## Fonctionnement
 
-Éditeur en 5 étapes, aperçu live à droite :
+Éditeur en 4 étapes, côte à côte avec l'aperçu live (aucun scroll de page) :
 
 1. **Détails** : nom, fonction, entité, téléphone fixe, mobile, email, site web, adresse
 2. **Photo** : import local (aperçu et PNG uniquement, recadré en carré) + URL publique de la photo (utilisée pour l'export réel). Sans photo, le logo Listen too (icône blanche sur carré noir) s'affiche automatiquement.
-3. **Réseaux** : LinkedIn, Instagram, Facebook, X, YouTube, GitHub (activer + coller le lien)
-4. **Modèle** : horizontal avec photo, ou compact sans photo (le plus sûr toutes messageries)
-5. **Design** : police web-safe du HTML exporté, champs personnalisés, QR code (généré automatiquement depuis le lien saisi, ou le site web si vide), ordre des champs de contact (le téléphone reste fixe sous la fonction)
+3. **Modèle** : horizontal avec photo, ou compact sans photo (le plus sûr toutes messageries)
+4. **Design** : police web-safe du HTML exporté, champs personnalisés, QR code (généré automatiquement depuis le lien saisi, ou le site web si vide), ordre des champs de contact (le téléphone reste fixe sous la fonction)
 
 Onglet **Enregistrées** : sauvegarder, modifier, dupliquer, supprimer des signatures.
 
@@ -74,7 +73,7 @@ La personne reçoit une invitation à accepter (email ou https://github.com/noti
 
 ## Tester
 
-1. Remplir les 5 étapes et vérifier que l'aperçu se met à jour à chaque modification.
+1. Remplir les 4 étapes et vérifier que l'aperçu se met à jour à chaque modification.
 2. **Outlook / Gmail** : depuis la **version en ligne** (pas localhost, sinon les icônes pointent vers votre machine), onglet Aperçu, « Copier la signature », puis coller dans :
    - Outlook : Paramètres > Comptes > Signatures
    - Gmail : Paramètres > Voir tous les paramètres > Signature
@@ -86,7 +85,7 @@ La personne reçoit une invitation à accepter (email ou https://github.com/noti
 ## Limites connues
 
 - **Stockage local non partagé** : les signatures sont enregistrées dans le `localStorage` du navigateur. Elles sont propres à l'appareil et au navigateur : pas de compte, pas de backend, pas de base partagée. Vider les données du navigateur les supprime.
-- **PNG = image statique** : rendu fidèle à la maquette, mais aucun lien cliquable (email, téléphone, réseaux, QR). Certains clients bloquent aussi les images par défaut.
+- **PNG = image statique** : rendu fidèle à la maquette, mais aucun lien cliquable (email, téléphone, site, QR). Certains clients bloquent aussi les images par défaut.
 - **Photo** : l'import local ne sert qu'à l'aperçu et au PNG. Pour l'export réel, la photo doit être hébergée sur une URL publique (idéalement sur listen-too.com). Si cette URL n'autorise pas le CORS, le PNG utilise le logo à la place (importer la photo en local pour l'inclure).
 - **Images hébergées par l'outil** : les icônes et le logo de la signature sont chargés depuis l'URL de déploiement. Si l'outil change d'adresse, les signatures déjà installées perdent leurs icônes. Pour un usage pérenne, héberger `public/sig/` sur listen-too.com et renseigner `VITE_ASSET_BASE_URL`.
 - **QR code** : dépend du service tiers `api.qrserver.com` pour le HTML exporté.
