@@ -55,6 +55,23 @@ npm run preview    # sert dist/ en local
 
 Variable optionnelle `VITE_ASSET_BASE_URL` : URL publique qui héberge `sig/` (icônes, logo) si elle diffère de l'URL de l'outil, par exemple `https://listen-too.com/signature-assets/`.
 
+## Déploiement
+
+GitHub Pages, via le workflow `.github/workflows/deploy.yml` : chaque push sur `main` rebuild et redéploie automatiquement. Le site est servi sous `/<nom-du-repo>/` (variable `BASE_PATH` fournie par le workflow).
+
+Réglage unique dans le repo : Settings > Pages > Source = **GitHub Actions**.
+
+## Donner accès au repo
+
+```bash
+# lecture/écriture (push)
+gh api -X PUT repos/Erma404/listen-too-signature/collaborators/<login-github> -f permission=push
+# lecture seule
+gh api -X PUT repos/Erma404/listen-too-signature/collaborators/<login-github> -f permission=pull
+```
+
+La personne reçoit une invitation à accepter (email ou https://github.com/notifications).
+
 ## Tester
 
 1. Remplir les 5 étapes et vérifier que l'aperçu se met à jour à chaque modification.
