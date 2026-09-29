@@ -4,11 +4,10 @@
 
 export const ACCENT = "#D3EF9D";
 export const TEXT_COLOR = "#1a1a1a";
-export const MUTED_COLOR = "#555555";
 
 export const FONTS = ["Arial", "Helvetica", "Georgia", "Times New Roman", "Verdana", "Tahoma", "Trebuchet MS", "Courier New"];
 
-// Champs réordonnables. Le téléphone (fixe + mobile) est hors liste : toujours juste sous la fonction.
+// Champs réordonnables. Le mobile est hors liste : toujours juste sous la fonction.
 export const BLOCK_META = {
   email: { label: "Email" },
   website: { label: "Site web" },
@@ -17,7 +16,6 @@ export const BLOCK_META = {
 export const DEFAULT_BLOCK_ORDER = ["email", "website", "address"];
 
 const ICON_FILES = {
-  phone: "sig/phone.png",
   mobile: "sig/phone.png",
   email: "sig/email.png",
   website: "sig/website.png",
@@ -73,7 +71,7 @@ export function qrImageUrl(target, size = 140) {
 
 export function fieldHref(k, raw) {
   const v = raw.trim();
-  if (k === "phone" || k === "mobile") return `tel:${v.replace(/[^+\d]/g, "")}`;
+  if (k === "mobile") return `tel:${v.replace(/[^+\d]/g, "")}`;
   if (k === "email") return `mailto:${v}`;
   if (k === "website") return normalizeUrl(v);
   return null;
@@ -89,7 +87,7 @@ export function activeBlocks(details, design) {
 }
 
 export function phoneKeys(details) {
-  return ["phone", "mobile"].filter((k) => details[k] && details[k].trim());
+  return ["mobile"].filter((k) => details[k] && details[k].trim());
 }
 
 /**
@@ -115,9 +113,6 @@ export function buildSignatureHtml({ details, template, design, photoSrc }) {
   const row = (inner) => `<tr><td style="padding:4px 0 0 0;">${inner}</td></tr>`;
 
   const nameRow = `<tr><td style="${base}font-size:15px;font-weight:bold;">${escapeHtml(details.name) || "Prénom Nom"}</td></tr>`;
-  const entityRow = details.dept.trim()
-    ? `<tr><td style="font-family:${ff};color:${MUTED_COLOR};font-size:12px;padding:2px 0 0 0;">${escapeHtml(details.dept)}</td></tr>`
-    : "";
   // Pastille de fonction : cellule bgcolor (respectée par Outlook). Le border-radius est un bonus ignoré par Outlook Windows.
   const titleRow = details.title.trim()
     ? row(
@@ -148,7 +143,7 @@ export function buildSignatureHtml({ details, template, design, photoSrc }) {
     ? `<tr><td style="padding:8px 0 0 0;"><a href="${escapeHtml(qr)}"><img src="${escapeHtml(qrImageUrl(qr))}" width="70" height="70" alt="QR code" border="0" style="display:block;width:70px;height:70px;border:0;" /></a></td></tr>`
     : "";
 
-  const textStack = table(`${nameRow}${entityRow}${titleRow}${phoneRow}${blockRows}${customRows}${qrRow}`);
+  const textStack = table(`${nameRow}${titleRow}${phoneRow}${blockRows}${customRows}${qrRow}`);
   const white = ` bgcolor="#ffffff" style="border-collapse:collapse;background-color:#ffffff;"`;
   const cellWhite = `bgcolor="#ffffff" valign="top" style="vertical-align:top;background-color:#ffffff;`;
 
@@ -167,7 +162,6 @@ export function buildSignatureHtml({ details, template, design, photoSrc }) {
 
 export function buildSignaturePlainText({ details, design }) {
   const lines = [details.name || "Prénom Nom"];
-  if (details.dept.trim()) lines.push(details.dept.trim());
   if (details.title.trim()) lines.push(details.title.trim());
   const phones = phoneKeys(details).map((k) => details[k].trim());
   if (phones.length) lines.push(phones.join("  |  "));

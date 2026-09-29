@@ -1,7 +1,7 @@
 import QRCode from "qrcode";
-import { ACCENT, TEXT_COLOR, MUTED_COLOR, FALLBACK_PHOTO, assetUrl, activeBlocks, phoneKeys, displayValue, qrTarget } from "./signature.js";
+import { ACCENT, TEXT_COLOR, FALLBACK_PHOTO, assetUrl, activeBlocks, phoneKeys, displayValue, qrTarget } from "./signature.js";
 
-const ICONS = { phone: "sig/phone.png", mobile: "sig/phone.png", email: "sig/email.png", website: "sig/website.png", address: "sig/address.png" };
+const ICONS = { mobile: "sig/phone.png", email: "sig/email.png", website: "sig/website.png", address: "sig/address.png" };
 const HOUSE = '"WT Gothic", Arial, sans-serif';
 const SCALE = 3; // rendu net sur écrans haute densité
 
@@ -55,7 +55,6 @@ export async function renderSignaturePng({ details, images, template, design }) 
 
   const F = {
     name: `600 20px ${HOUSE}`,
-    entity: `400 13px ${HOUSE}`,
     pill: `600 12px ${HOUSE}`,
     body: `400 13px ${HOUSE}`,
   };
@@ -72,13 +71,6 @@ export async function renderSignaturePng({ details, images, template, design }) 
     ctx.fillStyle = TEXT_COLOR;
     ctx.fillText(name, x, y);
   });
-  if (details.dept.trim()) {
-    add(20, textW(F.entity, details.dept), (ctx, x, y) => {
-      ctx.font = F.entity;
-      ctx.fillStyle = MUTED_COLOR;
-      ctx.fillText(details.dept, x, y);
-    });
-  }
   if (details.title.trim()) {
     const pillW = textW(F.pill, details.title) + 24;
     add(30, pillW, (ctx, x, y) => {

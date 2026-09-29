@@ -39,8 +39,6 @@ const C = {
 const emptyDetails = {
   name: "",
   title: "",
-  dept: "Listen too",
-  phone: "",
   mobile: "",
   email: "",
   website: "https://listen-too.com",
@@ -85,7 +83,8 @@ function normalizeSnapshot(s = {}) {
   design.blockOrder = [...known, ...DEFAULT_BLOCK_ORDER.filter((k) => !known.includes(k))];
   design.qr = { enabled: false, url: "", ...(design.qr || {}) };
   return {
-    details: { ...emptyDetails, ...(s.details || {}) },
+    // seuls les champs actuels sont conservés (anciens brouillons : téléphone fixe, entité)
+    details: Object.fromEntries(Object.keys(emptyDetails).map((k) => [k, s.details?.[k] ?? emptyDetails[k]])),
     images: { ...emptyImages, ...(s.images || {}) },
     template: s.template === "compact" ? "compact" : "horizontal",
     design,
@@ -444,17 +443,11 @@ export default function SignatureGenerator() {
                   <Field label="Fonction">
                     <input className={inputCls} value={details.title} onChange={(e) => updateDetail("title", e.target.value)} placeholder="Lead Product Owner" />
                   </Field>
-                  <Field label="Entité">
-                    <input className={inputCls} value={details.dept} onChange={(e) => updateDetail("dept", e.target.value)} />
-                  </Field>
-                  <Field label="Téléphone fixe">
-                    <input className={inputCls} type="tel" value={details.phone} onChange={(e) => updateDetail("phone", e.target.value)} placeholder="01 23 45 67 89" />
-                  </Field>
                   <Field label="Mobile">
                     <input className={inputCls} type="tel" value={details.mobile} onChange={(e) => updateDetail("mobile", e.target.value)} placeholder="06 12 34 56 78" />
                   </Field>
                   <Field label="Email" className="col-span-2">
-                    <input className={inputCls} type="email" value={details.email} onChange={(e) => updateDetail("email", e.target.value)} placeholder="prenom.nom@listen-too.com" />
+                    <input className={inputCls} type="email" value={details.email} onChange={(e) => updateDetail("email", e.target.value)} placeholder="cdupere@listen-too.com" />
                   </Field>
                   <Field label="Site web">
                     <input className={inputCls} value={details.website} onChange={(e) => updateDetail("website", e.target.value)} />
@@ -544,7 +537,7 @@ export default function SignatureGenerator() {
                 </label>
 
                 <p className="ui-label">Ordre des champs de contact</p>
-                <p className="ui-hint mb-2">Le téléphone reste toujours sous la fonction.</p>
+                <p className="ui-hint mb-2">Le mobile reste toujours sous la fonction.</p>
                 <ul className="grid gap-2 mb-6">
                   {design.blockOrder.map((k, i) => (
                     <li
