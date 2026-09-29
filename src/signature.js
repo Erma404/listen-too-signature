@@ -100,14 +100,19 @@ export function buildSignatureHtml({ details, template, design, photoSrc }) {
   const table = (inner, extra = "") =>
     `<table role="presentation" cellpadding="0" cellspacing="0" border="0"${extra}>${inner}</table>`;
 
+  // Icône et texte sur une même ligne de 16 px, interligne imposé (y compris Outlook) :
+  // l'icône de 12 px est centrée sur la hauteur des chiffres/capitales, quel que soit le contexte de collage.
+  const LINE = "font-size:12px;line-height:16px;mso-line-height-rule:exactly;";
   const contactCell = (k) => {
     const href = fieldHref(k, details[k]);
-    const text = `<span style="${base}font-size:12px;">${escapeHtml(displayValue(k, details[k]))}</span>`;
-    const linked = href ? `<a href="${escapeHtml(href)}" style="text-decoration:none;color:${TEXT_COLOR};">${text}</a>` : text;
+    const text = `<span style="${base}${LINE}">${escapeHtml(displayValue(k, details[k]))}</span>`;
+    const linked = href ? `<a href="${escapeHtml(href)}" style="text-decoration:none;color:${TEXT_COLOR};${LINE}">${text}</a>` : text;
     return (
-      `<td width="12" valign="middle" style="width:12px;padding:0;"><img src="${escapeHtml(assetUrl(ICON_FILES[k]))}" width="12" height="12" alt="" border="0" style="display:block;width:12px;height:12px;border:0;" /></td>` +
+      `<td width="12" height="16" valign="middle" style="width:12px;height:16px;padding:0;font-size:0;line-height:16px;mso-line-height-rule:exactly;"><img src="${escapeHtml(
+        assetUrl(ICON_FILES[k])
+      )}" width="12" height="12" alt="" border="0" style="display:block;width:12px;height:12px;border:0;" /></td>` +
       `<td width="8" style="width:8px;font-size:0;line-height:0;padding:0;">&nbsp;</td>` +
-      `<td valign="middle" style="padding:0;">${linked}</td>`
+      `<td height="16" valign="middle" style="${base}${LINE}height:16px;padding:0;">${linked}</td>`
     );
   };
   const row = (inner) => `<tr><td style="padding:4px 0 0 0;">${inner}</td></tr>`;

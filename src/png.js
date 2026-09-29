@@ -85,8 +85,12 @@ export async function renderSignaturePng({ details, images, template, design }) 
   const contactItem = (k) => ({ k, text: displayValue(k, details[k]), w: 18 + textW(F.body, displayValue(k, details[k])) });
   const drawContacts = (items) => (ctx, x, y) => {
     let tx = x;
+    ctx.font = F.body;
+    // Icône centrée sur l'encre des chiffres/capitales (textBaseline "top" : ascent négatif = sous la ligne du haut)
+    const m = ctx.measureText("0123456789P");
+    const inkCenter = y + 3 + (m.actualBoundingBoxDescent - m.actualBoundingBoxAscent) / 2;
     items.forEach((it) => {
-      if (icons[it.k]) ctx.drawImage(icons[it.k], tx, y + 5, 12, 12);
+      if (icons[it.k]) ctx.drawImage(icons[it.k], tx, inkCenter - 6, 12, 12);
       ctx.font = F.body;
       ctx.fillStyle = TEXT_COLOR;
       ctx.fillText(it.text, tx + 18, y + 3);
