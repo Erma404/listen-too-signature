@@ -736,7 +736,7 @@ export default function SignatureGenerator() {
                   onKeyDown={onPreviewKeyDown}
                   onCopy={onPreviewCopy}
                   aria-label="Aperçu de la signature : cliquez puis Ctrl/Cmd+A et Ctrl/Cmd+C"
-                  className={`ui-focus inline-block max-w-full ${design.useHouseFont ? "house-font" : ""}`}
+                  className={`sig-preview ui-focus inline-block max-w-full ${design.useHouseFont ? "house-font" : ""}`}
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
                 />
               </div>

@@ -166,3 +166,8 @@ input[type="checkbox"] {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
 }
+
+/* L'aperçu doit rendre la signature comme un client mail : pas de max-width de Tailwind sur les images */
+.sig-preview img {
+  max-width: none;
+}

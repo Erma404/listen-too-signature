@@ -156,9 +156,12 @@ export function buildSignatureHtml({ details, template, design, photoSrc }) {
     return table(`<tr><td ${cellWhite}padding:0;">${textStack}</td></tr>`, white);
   }
 
-  const photoCell = `<td width="72" ${cellWhite}width:72px;padding:0 16px 0 0;"><img src="${escapeHtml(photoSrc)}" width="72" height="72" alt="${escapeHtml(
-    details.name
-  )}" border="0" style="display:block;width:72px;height:72px;border:0;" /></td>`;
+  // Espacement dans une cellule dédiée : un padding sur la cellule photo réduirait la place de l'image (logo écrasé).
+  const photoCell =
+    `<td width="72" ${cellWhite}width:72px;min-width:72px;padding:0;"><img src="${escapeHtml(photoSrc)}" width="72" height="72" alt="${escapeHtml(
+      details.name
+    )}" border="0" style="display:block;width:72px;min-width:72px;max-width:72px;height:72px;border:0;" /></td>` +
+    `<td width="16" style="width:16px;min-width:16px;font-size:0;line-height:0;padding:0;">&nbsp;</td>`;
   return table(`<tr>${photoCell}<td ${cellWhite}padding:0;">${textStack}</td></tr>`, white);
 }
 
