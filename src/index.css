@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "WT Gothic";
+  src: url("/fonts/WTGothic-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: "WT Gothic";
+  src: url("/fonts/WTGothic-SemiBold.ttf") format("truetype");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Aperçu fidèle maquette : WT Gothic à l'écran uniquement. Le HTML sous-jacent garde la police web-safe. */
+.house-font,
+.house-font * {
+  font-family: "WT Gothic", Arial, sans-serif !important;
+}
