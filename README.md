@@ -32,7 +32,7 @@ Onglet **Enregistrées** : sauvegarder, modifier, dupliquer, supprimer des signa
 
 - Tableaux `role="presentation"`, styles en ligne, attributs `bgcolor` / `width` doublés pour Outlook
 - Fond blanc forcé sur toute la signature (limite l'inversion des couleurs en thème sombre)
-- Photo carrée 72 × 72 px, sans coin arrondi (Outlook Windows les ignore)
+- Photo carrée 72 × 72 px, sans coin arrondi (Outlook Windows ignore `border-radius`). Le logo Listen too de repli a des coins de 8 px intégrés à l'image (`public/sig/logo-listen-too.png`), donc visibles partout
 - Icônes et logo servis en **URL absolue** depuis le site déployé (`/sig/*.png`) : Gmail supprime les images `data:` en base64 et Outlook les bloque souvent
 - QR code dans le HTML : image générée par `api.qrserver.com` (aucune configuration). Dans le PNG : QR généré localement (bibliothèque `qrcode`)
 
